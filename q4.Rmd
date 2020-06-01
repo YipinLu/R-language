@@ -1,0 +1,99 @@
+---
+title: "question 4"
+author: "Yipin Lu"
+date: "05/03/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+(a)
+when $n=20$, from the result,the expected length of CI for estimate of the geometric mean is 0.0001, the estimate of the mean is 0.0008. The estimate of the geometric mean is narrower, and standard error is smaller, so it is more precise.
+```{r}
+set.seed(100)
+n <- 20
+calcCI <- function(n) {
+  x <- rnorm(n,0,1)
+  y <- exp(2*x-10)
+  w <- log(y)
+  return(c(mean(w)-qt(0.975,df=n-1)*sd(w)/sqrt(n),mean(w)+
+             qt(0.975,df=n-1)*sd(w)/sqrt(n)))
+}
+CL <- replicate(2000, expr = calcCI(n = 20))
+expCL <- exp(CL)
+length.gCL <- expCL[2,]-expCL[1,]
+expected.glength.20 <- mean(length.gCL)
+expected.glength.20
+
+se.glength.20 <- sd(length.gCL)/sqrt(n)
+se.glength.20
+
+
+
+m.calcCI <- function(n) {
+  x <- rnorm(n,0,1)
+  y <- exp(2*x-10)
+  return(c(mean(y)-qt(0.975,df=n-1)*sd(y)/sqrt(n),mean(y)+
+             qt(0.975,df=n-1)*sd(y)/sqrt(n)))
+}
+mCL <- replicate(2000, expr = m.calcCI(n = 20))
+length.mCL <- mCL[2,]-mCL[1,]
+expected.mlength.20 <- mean(length.mCL)
+expected.mlength.20
+se.mlength.20 <- sd(length.mCL)/sqrt(n)
+se.mlength.20
+```
+(b)
+when $n=50$, from the result,the expected length of CI for estimate of the geometric mean is 0.000057, for the estimate of the mean ia 0.0006, so the estimate of the geometric mean is more precise.
+```{r}
+n <- 50
+CL <- replicate(2000, expr = calcCI(n = 50))
+expCL <- exp(CL)
+length.gCL <- expCL[2,]-expCL[1,]
+expected.glength.50 <- mean(length.gCL)
+expected.glength.50
+se.glength.50 <- sd(length.gCL)/sqrt(n)
+se.glength.50
+mCL <- replicate(2000, expr = m.calcCI(n = 50))
+length.mCL <- mCL[2,]-mCL[1,]
+expected.mlength.50 <- mean(length.mCL)
+expected.mlength.50
+se.mlength.50 <- sd(length.mCL)/sqrt(n)
+se.mlength.50
+```
+(c)
+when $n=100$, from the result,the expected length of CI for estimate of the geometric mean is 0.000038, for the estimate of the mean ia 0.0006, so the estimate of the geometric mean is more precise.
+```{r}
+n <- 100
+CL <- replicate(2000, expr = calcCI(n = 100))
+expCL <- exp(CL)
+length.gCL <- expCL[2,]-expCL[1,]
+expected.glength.100 <- mean(length.gCL)
+expected.glength.100
+se.glength.100 <- sd(length.gCL)/sqrt(n)
+se.glength.100
+mCL <- replicate(2000, expr = m.calcCI(n = 100))
+length.mCL <- mCL[2,]-mCL[1,]
+expected.mlength.100 <- mean(length.mCL)
+expected.mlength.100
+se.mlength.100 <- sd(length.mCL)/sqrt(n)
+se.mlength.100
+```
+we can see the result
+```{r}
+n <- c(20,50,100)
+expected.glength <- c(expected.glength.20,expected.glength.50,expected.glength.100)
+se.glength <- c(se.glength.20,se.glength.50,se.glength.100)
+expected.mlength <- c(expected.mlength.20,expected.mlength.50,expected.mlength.100)
+se.mlength <- c(se.mlength.20,se.mlength.50,se.mlength.100)
+result <- matrix(0,nrow =3,ncol = 5)
+result[,1] <- n
+result[,2] <- expected.glength
+result[,3] <- se.glength
+result[,4] <- expected.mlength
+result[,5] <- se.mlength
+colnames(result) <- c("n","expected.glength","se.glength","expected.mlength","se.mlength")
+rownames(result) <- rep("",3)
+result
+```
